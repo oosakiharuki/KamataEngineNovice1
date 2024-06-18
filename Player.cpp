@@ -30,15 +30,24 @@ void Player::Updata(char* keys, char* preKeys,bool DFlag,float SenY) {
 	if (keys[DIK_A]) {
 		pos_.x -= speed_;
 	}
+	if (keys[DIK_W]) {
+		pos_.y += speed_;
+	}
+	if (keys[DIK_S]) {
+		pos_.y -= speed_;
+	}
+
+
+
 	if (keys[DIK_W] && !preKeys[DIK_W]) {
-		JumpFlag_ = true;
-		velocity_.y = 20.0f;
+		//JumpFlag_ = true;
+		//velocity_.y = 20.0f;
 	}	
 
-	if (JumpFlag_) {
-		velocity_.y += aclloration_.y;
-		pos_.y += velocity_.y;
-	}
+	//if (JumpFlag_) {
+	//	velocity_.y += aclloration_.y;
+	//	pos_.y += velocity_.y;
+	//}
 	
 	//sikaku no asiba
 	//if (pos_.x< scaffold_[0]->pos_[0].x  && scaffold_[0]->pos_[1].x < pos_.x) {
@@ -55,11 +64,11 @@ void Player::Updata(char* keys, char* preKeys,bool DFlag,float SenY) {
 	SenScreenY *= -1;
 
 	if (DFlag == true) {
-		velocity_.y = 0;
-		aclloration_.y = 0;
-		pos_.y = SenScreenY;
-	}else {
-		aclloration_.y = -0.8f;
+	//	velocity_.y = 0;
+	//	aclloration_.y = 0;
+	//	pos_.y = SenScreenY;
+	//}else {
+	//	aclloration_.y = -0.8f;
 	}
 
 

@@ -12,14 +12,33 @@ int clamp(int a, int b, int c)// t,0,1
 	}
 	else if (a <= b)
 	{
-		return b;//0
+		return a;//0
 	}
 	else if (a >= c)
 	{
-		return c;//1
+		return a;//1
 	}
 
-	return 0;
+	return a;
+}
+
+float Dot(const Vector2& v1, const Vector2& v2) {
+	float result;
+	result = (v1.x * v2.x) + (v1.y * v2.y);
+	return result;
+}
+
+float Length(const Vector2& v) {
+	float result;
+	result = (float)sqrt((v.x * v.x) + (v.y * v.y));
+	return result;
+}
+
+Vector2 Normalize(const Vector2& v) {
+	Vector2 result;
+	result.x = v.x / (float)sqrt((v.x * v.x) + (v.y * v.y));
+	result.y = v.y / (float)sqrt((v.x * v.x) + (v.y * v.y));
+	return result;
 }
 
 const char kWindowTitle[] = "LC1B_03_オオサキ_ハルキ_タイトル";
@@ -36,8 +55,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	Player* player_ = new Player(100.0f, 0.0f, 5.0f, 20.0f);
 
-	Vector2 MousePointStart = { 0,0 };
-	Vector2 MousePointEnd = { 0,0 };
+	Vector2 MousePointStart = { 100,200 };
+	Vector2 MousePointEnd = { 500,200 };
 
 	float circle = 30.0f;
 
@@ -48,8 +67,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Vector2 StartPointPlayer = {};
 	Vector2 StartEndPoint = {};
 
-	float nbaX = 0;
-	float nbaY = 0;
+	//float nbaX = 0;
+	//float nbaY = 0;
 
 	float t = 0;
 
@@ -92,29 +111,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//nbaX = StartEndPoint.x;
 		//nbaY = StartEndPoint.y;
 
-		length1 = sqrtf((StartEndPoint.x * StartEndPoint.x) + (StartEndPoint.y * StartEndPoint.y));
+		length1 = Length(StartEndPoint);
 
+		e = Normalize(StartEndPoint);//正規化
 
-
-		if (length1 != 0.0f) {
-			nbaX = (float)sqrt((StartPointPlayer.x * StartPointPlayer.x) - (StartPointPlayer.y * StartPointPlayer.y));
-			nbaY = (float)sqrt((StartPointPlayer.x * StartPointPlayer.x) - (StartPointPlayer.y * StartPointPlayer.y));
-		}
-
-		e = { nbaX,nbaY };//正規化
-
-
-		dot = ((e.x * StartPointPlayer.x) + (e.y * StartPointPlayer.y));
+		dot = Dot(StartPointPlayer,e);
 		t = dot / length1;
 
-		t = (float)clamp((int)t, (int)0, (int)1);
+		//t = (float)clamp((int)t, (int)0, (int)1);
 
 		Vector2 f = { ((1.0f - t) * MousePointStart.x) + (t * MousePointEnd.x)
 			,((1.0f - t) * MousePointStart.y) + (t * MousePointEnd.y) };
 
 		Vector2 cf = { player_->GetPos_().x - f.x , player_->GetScreenY() - f.y };
 
-		float distance = sqrtf((cf.x * cf.x) + (cf.y * cf.y));
+		float distance = Length(cf);
 
 
 		//線の長さ
@@ -131,15 +142,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		player_->Draw();
 
-		if (distance < player_->GetRadius_() + circle)
+		if (t < 0 || t > 1)
+		{
+			DestanceFlag = false;
+			Novice::DrawEllipse(1000, 100, 30, 30, 0.0f,RED, kFillModeSolid);
+		}
+		else if (distance < player_->GetRadius_() + circle)
 		{
 			DestanceFlag = true;
-			Novice::DrawEllipse(100, 100, 30, 30, 0.0f, WHITE, kFillModeSolid);
+			Novice::DrawEllipse(1000, 100, 30, 30, 0.0f, WHITE, kFillModeSolid);
 		}
 		else
 		{
 			DestanceFlag = false;
-			Novice::DrawEllipse(100, 100, 30, 30, 0.0f, BLUE, kFillModeSolid);
+			Novice::DrawEllipse(1000, 100, 30, 30, 0.0f, BLUE, kFillModeSolid);
 		}
 
 		Novice::DrawLine((int)MousePointStart.x, (int)MousePointStart.y, (int)MousePointEnd.x, (int)MousePointEnd.y, WHITE);
@@ -147,16 +163,22 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		Novice::DrawEllipse((int)MousePointEnd.x, (int)MousePointEnd.y, 30, 30, 0.0f, WHITE, kFillModeWireFrame);
 
 
-		Novice::ScreenPrintf(0, 0, "mouse: %d", MouseX);
-		Novice::ScreenPrintf(0, 20, "Start:%f", MousePointStart.x);
-		Novice::ScreenPrintf(0, 40, "End:%f", MousePointEnd.x);
+		Novice::ScreenPrintf(0, 0, "mouse: %d", MouseY);
+		Novice::ScreenPrintf(0, 20, "Start:%f", MousePointStart.y);
+		Novice::ScreenPrintf(0, 40, "End:%f", MousePointEnd.y);
 		Novice::ScreenPrintf(0, 60, "distance:%f", distance);
 		Novice::ScreenPrintf(0, 80, "radius:%f", player_->GetRadius_() + circle);
 		Novice::ScreenPrintf(0, 100, "dot:%f", dot);
-		Novice::ScreenPrintf(0, 120, "%f", length1);
-		Novice::ScreenPrintf(0, 140, "%f", dot / length1);
-		Novice::ScreenPrintf(0, 160, "%f", t);
-		Novice::ScreenPrintf(0, 180, "%f,%f", e.x, e.y);
+		Novice::ScreenPrintf(0, 120, "length1:%f", length1);
+		Novice::ScreenPrintf(0, 140, "dot / length1:%f", dot / length1);
+		Novice::ScreenPrintf(0, 160, "t :%f", t);
+		Novice::ScreenPrintf(0, 180, " e.x, e.y :%f,%f", e.x, e.y);
+		Novice::ScreenPrintf(0, 200, " f.x, f.y :%f,%f", f.x, f.y);
+
+		Novice::ScreenPrintf(0, 400, " %f", (float)clamp((int)t, (int)0, (int)1));
+
+		
+
 
 		///
 		/// ↑描画処理ここまで

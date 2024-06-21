@@ -17,10 +17,12 @@ private:
 	Vector2 pos_;
 	float ScreenY;
 	Vector2 velocity_;
+	float velocityMaxY;
 	Vector2 aclloration_;
 	float speed_;
 	float radius_;
 	bool JumpFlag_;
+	bool fallFlag_;
 
 	Scaffold* scaffold_[2];
 	float distance[2];

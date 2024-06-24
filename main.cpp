@@ -111,6 +111,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//nbaX = StartEndPoint.x;
 		//nbaY = StartEndPoint.y;
 
+
+		//カプセル化
 		length1 = Length(StartEndPoint);
 
 		e = Normalize(StartEndPoint);//正規化
@@ -118,7 +120,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		dot = Dot(StartPointPlayer,e);
 		t = dot / length1;
 
-		//t = (float)clamp((int)t, (int)0, (int)1);
 
 		Vector2 f = { ((1.0f - t) * MousePointStart.x) + (t * MousePointEnd.x)
 			,((1.0f - t) * MousePointStart.y) + (t * MousePointEnd.y) };
@@ -128,8 +129,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		float distance = Length(cf);
 
 
-		//線の長さ
-		//float sen = (float)sqrt(StartEndPoint.x * StartEndPoint.x + StartEndPoint.y * StartEndPoint.y);
+		if (t < 0 || t > 1)
+		{
+			DestanceFlag = false;
+		}
+		else if (distance < player_->GetRadius_() + circle)
+		{
+			DestanceFlag = true;
+		}
+		else
+		{
+			DestanceFlag = false;
+		}
 
 
 		///
@@ -142,40 +153,41 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		player_->Draw();
 
-		if (t < 0 || t > 1)
-		{
-			DestanceFlag = false;
-			Novice::DrawEllipse(1000, 100, 30, 30, 0.0f,RED, kFillModeSolid);
-		}
-		else if (distance < player_->GetRadius_() + circle)
-		{
-			DestanceFlag = true;
-			Novice::DrawEllipse(1000, 100, 30, 30, 0.0f, WHITE, kFillModeSolid);
-		}
-		else
-		{
-			DestanceFlag = false;
-			Novice::DrawEllipse(1000, 100, 30, 30, 0.0f, BLUE, kFillModeSolid);
-		}
+
+
+		//if (t < 0 || t > 1)
+		//{
+		//	Novice::DrawEllipse(1000, 100, 30, 30, 0.0f,RED, kFillModeSolid);
+		//}
+		//else if (distance < player_->GetRadius_() + circle)
+		//{
+		//	Novice::DrawEllipse(1000, 100, 30, 30, 0.0f, WHITE, kFillModeSolid);
+		//}
+		//else
+		//{
+		//	Novice::DrawEllipse(1000, 100, 30, 30, 0.0f, BLUE, kFillModeSolid);
+		//}
+
+
 
 		Novice::DrawLine((int)MousePointStart.x, (int)MousePointStart.y, (int)MousePointEnd.x, (int)MousePointEnd.y, WHITE);
 		Novice::DrawEllipse((int)MousePointStart.x, (int)MousePointStart.y, 30, 30, 0.0f, WHITE, kFillModeWireFrame);
 		Novice::DrawEllipse((int)MousePointEnd.x, (int)MousePointEnd.y, 30, 30, 0.0f, WHITE, kFillModeWireFrame);
 
 
-		Novice::ScreenPrintf(0, 0, "mouse: %d", MouseY);
-		Novice::ScreenPrintf(0, 20, "Start:%f", MousePointStart.y);
-		Novice::ScreenPrintf(0, 40, "End:%f", MousePointEnd.y);
-		Novice::ScreenPrintf(0, 60, "distance:%f", distance);
-		Novice::ScreenPrintf(0, 80, "radius:%f", player_->GetRadius_() + circle);
-		Novice::ScreenPrintf(0, 100, "dot:%f", dot);
-		Novice::ScreenPrintf(0, 120, "length1:%f", length1);
-		Novice::ScreenPrintf(0, 140, "dot / length1:%f", dot / length1);
-		Novice::ScreenPrintf(0, 160, "t :%f", t);
-		Novice::ScreenPrintf(0, 180, " e.x, e.y :%f,%f", e.x, e.y);
-		Novice::ScreenPrintf(0, 200, " f.x, f.y :%f,%f", f.x, f.y);
+		//Novice::ScreenPrintf(0, 0, "mouse: %d", MouseY);
+		//Novice::ScreenPrintf(0, 20, "Start:%f", MousePointStart.y);
+		//Novice::ScreenPrintf(0, 40, "End:%f", MousePointEnd.y);
+		//Novice::ScreenPrintf(0, 60, "distance:%f", distance);
+		//Novice::ScreenPrintf(0, 80, "radius:%f", player_->GetRadius_() + circle);
+		//Novice::ScreenPrintf(0, 100, "dot:%f", dot);
+		//Novice::ScreenPrintf(0, 120, "length1:%f", length1);
+		//Novice::ScreenPrintf(0, 140, "dot / length1:%f", dot / length1);
+		//Novice::ScreenPrintf(0, 160, "t :%f", t);
+		//Novice::ScreenPrintf(0, 180, " e.x, e.y :%f,%f", e.x, e.y);
+		//Novice::ScreenPrintf(0, 200, " f.x, f.y :%f,%f", f.x, f.y);
 
-		Novice::ScreenPrintf(0, 400, " %f", (float)clamp((int)t, (int)0, (int)1));
+		//Novice::ScreenPrintf(0, 400, " %f", (float)clamp((int)t, (int)0, (int)1));
 
 		
 

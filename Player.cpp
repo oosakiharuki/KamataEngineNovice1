@@ -20,6 +20,7 @@ Player::Player(float posX, float posY, float speed, float radius) {
 	SenScreenY = 50;
 
 	velocityMaxY = -20.0f;
+	timerVelocty = 2.0f;
 }
 
 void Player::Updata(char* keys, char* preKeys,bool DFlag,float SenY) {
@@ -75,10 +76,10 @@ void Player::Updata(char* keys, char* preKeys,bool DFlag,float SenY) {
 	
 	
 	if (fallFlag_ == true) {
-		Novice::DrawEllipse((int)900, (int)500, (int)30, (int)30, 0.0f,RED, kFillModeSolid);
+		//Novice::DrawEllipse((int)900, (int)500, (int)30, (int)30, 0.0f,RED, kFillModeSolid);
 	}
 	else if (distance[0] <= radius_ || distance[1] <= radius_) {
-		Novice::DrawEllipse((int)600, (int)500, (int)30, (int)30, 0.0f, GREEN, kFillModeSolid);
+		//Novice::DrawEllipse((int)600, (int)500, (int)30, (int)30, 0.0f, GREEN, kFillModeSolid);
 		pos_.y = radius_;
 		JumpFlag_ = false;
 	}
@@ -94,11 +95,35 @@ void Player::Updata(char* keys, char* preKeys,bool DFlag,float SenY) {
 
 
 	if (DFlag == true) {
-		velocity_.y = 0;
-		aclloration_.y = 0;
-	}else {
-		aclloration_.y = -0.8f;
+		timerVelocty--;
+		if (timerVelocty > 0.0f) {
+			pos_.y -= velocity_.y;
+			velocity_.y = 0;
+			aclloration_.y = 0;
+		}
+		else {
+			timerVelocty = -1.0f;
+		}
 	}
+	else {
+		aclloration_.y = -0.8f;
+		timerVelocty = 2.0f;
+	}
+
+		//if (DFlag == true) {
+		//	velocity_.y = 20.0f;
+		//}
+
+		if (DFlag == true) {
+		pos_.x += 4.0f;
+		}
+
+
+		if (keys[DIK_R]) {
+			pos_.x = 100.0f;
+			pos_.y = 0.0f;
+		}
+
 		
 
 	//velocity jougen
